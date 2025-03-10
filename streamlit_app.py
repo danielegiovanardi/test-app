@@ -16,23 +16,22 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # Input dell'utente
-user_input = st.chat_input("Scrivi un messaggio...")
-
-if user_input:
-    # Aggiungi il messaggio dell'utente allo stato della chat
+if user_input := st.chat_input("Scrivi un messaggio..."):
+    # **1. Mostra subito il messaggio dell'utente**
     st.session_state.messages.append({"role": "user", "content": user_input})
+    with st.chat_message("user"):
+        st.markdown(user_input)
 
-    # Invia il messaggio all'API di n8n
+    # **2. Invio richiesta a n8n**
     response = requests.post(N8N_CHATBOT_URL, json={"message": user_input})
 
+    # **3. Recupero e visualizzazione della risposta**
     if response.status_code == 200:
         bot_response = response.json().get("output", "Errore nella risposta")
     else:
         bot_response = "Errore nella comunicazione con il chatbot"
 
-    # Aggiungi la risposta del bot allo stato della chat
+    # **4. Aggiorna lo stato con la risposta**
     st.session_state.messages.append({"role": "assistant", "content": bot_response})
-
-    # Mostra il messaggio del bot
     with st.chat_message("assistant"):
         st.markdown(bot_response)
