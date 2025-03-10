@@ -8,7 +8,9 @@ st.title("Chatbot con Streamlit e n8n")
 
 # Inizializza lo stato della chat se non è già presente
 if "messages" not in st.session_state:
-    st.session_state.messages = []
+    st.session_state.messages = [
+        {"role": "assistant", "content": "Ciao! Sono **Matteo Del Bianco**, il tuo consulente esperto in WiFi e Cambium Networks. Come posso aiutarti oggi?"}
+    ]
 
 # Mostra i messaggi della chat
 for message in st.session_state.messages:
