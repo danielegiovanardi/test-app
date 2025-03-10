@@ -17,9 +17,25 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
+# 🌟 **Bottoni per domande suggerite**
+st.write("📌 **Domande suggerite:**")
+col1, col2, col3 = st.columns(3)
+
+if col1.button("Quale Access Point Cambium fa al caso mio?"):
+    user_input = "Quale Access Point Cambium fa al caso mio?"
+
+elif col2.button("Qual è la differenza tra i modelli Cambium?"):
+    user_input = "Qual è la differenza tra i modelli Cambium?"
+
+elif col3.button("Come configurare un AP Cambium Networks?"):
+    user_input = "Come configurare un AP Cambium Networks?"
+
+else:
+    user_input = st.chat_input("Scrivi un messaggio...")
+    
 # Input dell'utente
-if user_input := st.chat_input("Scrivi un messaggio..."):
-    # **1. Mostra subito il messaggio dell'utente**
+if user_input:
+    # 1️⃣ Mostra subito il messaggio dell'utente
     st.session_state.messages.append({"role": "user", "content": user_input})
     with st.chat_message("user"):
         st.markdown(user_input)
