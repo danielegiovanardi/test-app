@@ -26,7 +26,7 @@ if user_input:
     response = requests.post(N8N_CHATBOT_URL, json={"message": user_input})
 
     if response.status_code == 200:
-        bot_response = response.json().get("reply", "Errore nella risposta")
+        bot_response = response.json().get("output", "Errore nella risposta")
     else:
         bot_response = "Errore nella comunicazione con il chatbot"
 
