@@ -17,39 +17,57 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# 🌟 **Bottoni per domande suggerite**
-st.write("📌 **Domande suggerite:**")
-col1, col2, col3 = st.columns(3)
+# 🌟 **Mostra i bottoni con domande suggerite se presenti**
+if st.session_state.suggested_questions:
+    st.write("📌 **Domande suggerite:**")
+    col1, col2, col3 = st.columns(3)
 
-if col1.button("Quale Access Point Cambium fa al caso mio?"):
-    user_input = "Quale Access Point Cambium fa al caso mio?"
-
-elif col2.button("Qual è la differenza tra i modelli Cambium?"):
-    user_input = "Qual è la differenza tra i modelli Cambium?"
-
-elif col3.button("Come configurare un AP Cambium Networks?"):
-    user_input = "Come configurare un AP Cambium Networks?"
-
+    if len(st.session_state.suggested_questions) >= 1 and col1.button(st.session_state.suggested_questions[0]):
+        user_input = st.session_state.suggested_questions[0]
+    elif len(st.session_state.suggested_questions) >= 2 and col2.button(st.session_state.suggested_questions[1]):
+        user_input = st.session_state.suggested_questions[1]
+    elif len(st.session_state.suggested_questions) >= 3 and col3.button(st.session_state.suggested_questions[2]):
+        user_input = st.session_state.suggested_questions[2]
+    else:
+        user_input = st.chat_input("Scrivi un messaggio...")
 else:
     user_input = st.chat_input("Scrivi un messaggio...")
     
-# Input dell'utente
+# **Se l'utente ha scritto o cliccato un bottone, invia il messaggio**
 if user_input:
     # 1️⃣ Mostra subito il messaggio dell'utente
     st.session_state.messages.append({"role": "user", "content": user_input})
     with st.chat_message("user"):
         st.markdown(user_input)
 
-    # **2. Invio richiesta a n8n**
+    # 2️⃣ Invio richiesta a n8n
     response = requests.post(N8N_CHATBOT_URL, json={"message": user_input})
 
-    # **3. Recupero e visualizzazione della risposta**
+    # 3️⃣ Recupero e visualizzazione della risposta
     if response.status_code == 200:
-        bot_response = response.json().get("output", "Errore nella risposta")
+        response_data = response.json()
+
+        # Estrarre la risposta principale
+        bot_response = response_data[0].get("domanda1", "Errore nella risposta")
+
+        # Estrarre le domande suggerite (le altre chiavi del JSON)
+        suggested_questions = [
+            response_data[0].get("domanda2", ""),
+            response_data[0].get("domanda3", ""),
+            response_data[0].get("domanda4", "")
+        ]
+
+        # Rimuovere eventuali stringhe vuote
+        suggested_questions = [q for q in suggested_questions if q]
+
     else:
         bot_response = "Errore nella comunicazione con il chatbot"
+        suggested_questions = []
 
-    # **4. Aggiorna lo stato con la risposta**
+    # 4️⃣ Mostra la risposta del chatbot
     st.session_state.messages.append({"role": "assistant", "content": bot_response})
     with st.chat_message("assistant"):
         st.markdown(bot_response)
+
+    # 5️⃣ Aggiorna le domande suggerite per la prossima interazione
+    st.session_state.suggested_questions = suggested_questions
