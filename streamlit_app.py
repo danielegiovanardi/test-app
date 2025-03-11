@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 
 # Configura l'URL dell'API del chatbot su n8n
-N8N_CHATBOT_URL = "https://flexa.app.n8n.cloud/webhook-test/3450ada9-c5bc-4efa-8868-11c78e870f5d"  # Modifica con il tuo endpoint
+N8N_CHATBOT_URL = "https://flexa.app.n8n.cloud/webhook/3450ada9-c5bc-4efa-8868-11c78e870f5d"  # Modifica con il tuo endpoint
 st.title("Chatbot con Streamlit e n8n")
 
 # ✅ Inizializza lo stato delle domande suggerite se non esiste
