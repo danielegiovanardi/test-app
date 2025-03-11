@@ -74,3 +74,6 @@ if user_input:
 
     # 5️⃣ Aggiorna le domande suggerite per la prossima interazione
     st.session_state.suggested_questions = suggested_questions
+ 
+    # 🌟 **Forza il ricaricamento della UI per mostrare le nuove domande subito**
+    st.rerun()
