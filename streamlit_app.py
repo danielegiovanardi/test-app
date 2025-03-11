@@ -3,10 +3,13 @@ import requests
 
 # Configura l'URL dell'API del chatbot su n8n
 N8N_CHATBOT_URL = "https://flexa.app.n8n.cloud/webhook-test/3450ada9-c5bc-4efa-8868-11c78e870f5d"  # Modifica con il tuo endpoint
-
 st.title("Chatbot con Streamlit e n8n")
 
-# Inizializza lo stato della chat se non è già presente
+# ✅ Inizializza lo stato delle domande suggerite se non esiste
+if "suggested_questions" not in st.session_state:
+    st.session_state.suggested_questions = []
+
+# ✅ Inizializza anche i messaggi della chat
 if "messages" not in st.session_state:
     st.session_state.messages = [
         {"role": "assistant", "content": "Ciao! Sono **Matteo Del Bianco**, il tuo consulente esperto in WiFi e Cambium Networks. Come posso aiutarti oggi?"}
@@ -17,7 +20,7 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# 🌟 **Mostra i bottoni con domande suggerite se presenti**
+# ✅ Ora la variabile è sempre definita, quindi questa verifica non darà errore
 if st.session_state.suggested_questions:
     st.write("📌 **Domande suggerite:**")
     col1, col2, col3 = st.columns(3)
@@ -32,7 +35,7 @@ if st.session_state.suggested_questions:
         user_input = st.chat_input("Scrivi un messaggio...")
 else:
     user_input = st.chat_input("Scrivi un messaggio...")
-    
+
 # **Se l'utente ha scritto o cliccato un bottone, invia il messaggio**
 if user_input:
     # 1️⃣ Mostra subito il messaggio dell'utente
